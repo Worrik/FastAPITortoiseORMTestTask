@@ -15,7 +15,8 @@ app.include_router(
 )
 app.include_router(
     analitics.router,
-    tags=["Analitics"]
+    tags=["Analitics"],
+    dependencies=[Depends(manager)]
 )
 
 register_tortoise(
