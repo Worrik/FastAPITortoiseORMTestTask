@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi.param_functions import Depends
@@ -28,6 +29,8 @@ async def login(response: Response, login: Login) -> SuccesfulLogin:
         data={'sub': user.id}
     )
     manager.set_cookie(response, access_token)
+    user.last_login = datetime.now()
+    await user.save()
     return SuccesfulLogin(access_token=access_token)
 
 
@@ -42,6 +45,7 @@ async def register(response: Response, user: UserInPydantic) -> SuccesfulLogin:
 
     db_user = User(**user.dict())
     db_user.set_password(user.password)
+    db_user.last_login = datetime.now()
     await db_user.save()
 
     access_token = manager.create_access_token(

@@ -16,6 +16,9 @@ class User(BaseModel):
     email = fields.CharField(max_length=255, unique=True)
     password = fields.CharField(max_length=128)
 
+    last_login = fields.DatetimeField(null=True)
+    last_active = fields.DatetimeField(null=True)
+
     liked_posts: fields.ReverseRelation
 
     def check_password(self, password):
@@ -33,14 +36,12 @@ class User(BaseModel):
         """
         self.password = crypt.crypt(password, crypt.METHOD_MD5)
 
-    class PydanticMeta:
-        """
-        Pydantic meta class
-        """
-
 
 UserPydantic = pydantic_model_creator(User, name="User", exclude=("password",))
-UserInPydantic = pydantic_model_creator(User, name="UserIn")
+UserInPydantic = pydantic_model_creator(
+    User, name="UserIn",
+    exclude=("id", "last_login", "last_active", "created_at", "updated_at"),
+)
 
 
 class Login(pydantic.BaseModel):

@@ -7,9 +7,8 @@ from app.models.base import BaseModel
 class Post(BaseModel):
     title = fields.CharField(max_length=255, unique=True, index=True)
     text = fields.TextField()
-    users_likes = fields.ManyToManyField(
-        "models.User", related_name="liked_posts", through="models.Like"
-    )
+
+    users_likes: fields.ReverseRelation
 
     def likes(self) -> int:
         return len(self.users_likes)

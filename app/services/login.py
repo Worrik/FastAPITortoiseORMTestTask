@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi.param_functions import Header
 from fastapi_login import LoginManager
 from app.config.base import SECRET
@@ -11,6 +12,8 @@ manager = LoginManager(
 
 
 @manager.user_loader()
-async def load_user(user_id: int):
-    return await User.get(id=user_id)
+async def load_user(user_id: int) -> User:
+    user = await User.get(id=user_id)
+    user.last_active = datetime.now()
+    return user
 

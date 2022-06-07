@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.param_functions import Depends
 from tortoise.contrib.fastapi import register_tortoise
-from app.routers import users, posts
+from app.routers import analitics, users, posts
 from app.config.base import DATABASE_URL
 from app.services.login import manager
 
@@ -12,6 +12,10 @@ app.include_router(
     posts.router,
     tags=["Posts"],
     dependencies=[Depends(manager)]
+)
+app.include_router(
+    analitics.router,
+    tags=["Analitics"]
 )
 
 register_tortoise(
