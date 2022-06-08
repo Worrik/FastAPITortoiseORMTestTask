@@ -20,6 +20,9 @@ class Post(BaseModel):
         computed = ["likes"]
         exclude=("id", "created_at", "updated_at", "likes")
 
+    class Meta:
+        table = "posts"
+
 
 PostPydantic = pydantic_model_creator(Post, name="Post")
 PostInPydantic = pydantic_model_creator(

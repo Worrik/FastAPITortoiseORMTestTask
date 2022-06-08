@@ -36,6 +36,8 @@ class User(BaseModel):
         """
         self.password = crypt.crypt(password, crypt.METHOD_MD5)
 
+    class Meta:
+        table = "users"
 
 UserPydantic = pydantic_model_creator(User, name="User", exclude=("password",))
 UserInPydantic = pydantic_model_creator(

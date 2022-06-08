@@ -11,3 +11,7 @@ class Like(BaseModel):
         'models.Post', on_delete=fields.CASCADE, related_name="users_likes",
     )
 
+    class Meta:
+        table = "likes"
+        unique_together = (("user", "post"),)
+
