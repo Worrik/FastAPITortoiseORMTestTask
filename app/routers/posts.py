@@ -35,11 +35,12 @@ async def create_post(post: PostInPydantic) -> PostPydantic:
 @router.put("/{id}/like", status_code=status.HTTP_202_ACCEPTED)
 async def like_post(id: int, user=Depends(manager)):
     post = await Post.get(id=id)
-    await Like.create(user=user, post=post)
+    if not await Like.filter(user=user, post=post).exists():
+        await Like.create(user=user, post=post)
 
 
 @router.put("/{id}/unlike", status_code=status.HTTP_202_ACCEPTED)
-async def unlike_post(id: int, user=Depends(manager)) -> PostPydantic:
+async def unlike_post(id: int, user=Depends(manager)):
     post = await Post.get(id=id)
     await Like.filter(user=user, post=post).delete()
 
