@@ -14,6 +14,9 @@ async def get_analitics(
         date_from: Optional[datetime.date] = None,
         date_to: Optional[datetime.date] = None
 ):
+    """
+    Get analitics for likes per day
+    """
     query = (Like.all()
                  .annotate(date=Date('created_at'),
                            count_likes=Count('id'))

@@ -5,6 +5,9 @@ from app.models.base import BaseModel
 
 
 class Post(BaseModel):
+    """
+    Post model
+    """
     title = fields.CharField(max_length=255, unique=True, index=True)
     text = fields.TextField()
 

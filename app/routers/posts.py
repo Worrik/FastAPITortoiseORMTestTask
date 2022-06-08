@@ -12,19 +12,28 @@ router = APIRouter(prefix="/posts")
 
 @router.get("/")
 async def get_posts() -> List[PostPydantic]:
+    """
+    Get all posts
+    """
     posts = await Post.all().prefetch_related('users_likes')
     return [PostPydantic.from_orm(post) for post in posts]
 
 
 @router.get("/{id}")
 async def get_post(id: int) -> PostPydantic:
+    """
+    Get a post by id
+    """
     post = await Post.get(id=id)
     await post.fetch_related('users_likes')
     return await PostPydantic.from_tortoise_orm(post)
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_post(post: PostInPydantic) -> PostPydantic:
+async def create_post(post: PostInPydantic):
+    """
+    Create a post
+    """
     if await Post.filter(title=post.title).exists():
         raise HTTPException(detail="Post already exists",
                             status_code=400)
@@ -34,6 +43,9 @@ async def create_post(post: PostInPydantic) -> PostPydantic:
 
 @router.put("/{id}/like", status_code=status.HTTP_202_ACCEPTED)
 async def like_post(id: int, user=Depends(manager)):
+    """
+    Like a post
+    """
     post = await Post.get(id=id)
     if not await Like.filter(user=user, post=post).exists():
         await Like.create(user=user, post=post)
@@ -41,11 +53,17 @@ async def like_post(id: int, user=Depends(manager)):
 
 @router.put("/{id}/unlike", status_code=status.HTTP_202_ACCEPTED)
 async def unlike_post(id: int, user=Depends(manager)):
+    """
+    Unlike a post
+    """
     post = await Post.get(id=id)
     await Like.filter(user=user, post=post).delete()
 
 @router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED)
 async def delete_post(id: int):
+    """
+    Delete a post
+    """
     post = await Post.get(id=id)
     await post.delete()
 

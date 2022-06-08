@@ -13,5 +13,6 @@ class Like(BaseModel):
 
     class Meta:
         table = "likes"
+        # user can like a post only once
         unique_together = (("user", "post"),)
 
